@@ -1,4 +1,4 @@
-//깃발 함수 보충, 남은 깃발, 오류 해결, 성공했을 떄 함수
+//
 #include <stdio.h>
 #include <windows.h>
 #include <conio.h>
@@ -19,6 +19,7 @@ void gameover();
 void flag(int x, int y);
 void success();
 void menu1();//게임시작
+void menu2();//게임설명
 void show_reset() {
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
@@ -28,9 +29,9 @@ void show_reset() {
 	mine_count = landmine;
 }
 int main() {
-	system("cls");
 	int cho_menu;
 	while (1) {
+		system("cls");
 		game = 0;
 		gotoxy(25, 10);
 		printf("---지뢰 찾기 게임---");
@@ -45,6 +46,7 @@ int main() {
 		scanf("%d", &cho_menu);
 		switch (cho_menu) {
 		case 1: menu1(); break;
+		case 2: menu2(); break;
 		case 3: break;
 		}
 	}
@@ -68,7 +70,7 @@ void menu1() {//게임시작
 			if (board[i][j] != 8) {
 				if (i - 1 != -1 && j - 1 != -1) { if (board[i - 1][j - 1] == 8) count++; }
 				if (j - 1 != -1) { if (board[i][j - 1] == 8) count++; }
-				if (i + 1 != size&&j-1!=-1) { if (board[i + 1][j - 1] == 8) count++; }
+				if (i + 1 != size && j - 1 != -1) { if (board[i + 1][j - 1] == 8) count++; }
 				if (i - 1 != -1) { if (board[i - 1][j] == 8) count++; }
 				if (i + 1 != size) { if (board[i + 1][j] == 8) count++; }
 				if (i - 1 != -1 && j + 1 != size) { if (board[i - 1][j + 1] == 8) count++; }
@@ -131,12 +133,19 @@ void menu1() {//게임시작
 		case 1: board_remove(cho_y - 1, cho_x - 1); break;
 		case 2: flag(cho_y - 1, cho_x - 1); break;
 		}
-		
+
 		system("cls");
 		if (game == 1) {
 			break;
 		}
 	}
+
+}
+void menu2() {
+	gotoxy(30, 10);
+	system("cls");
+	printf("1. 좌표를 입력하세요. ex)3 4(ENTER)");
+	getch();
 
 }
 void board_remove(int x, int y) {//겉 보드 지울 값 넣기
@@ -145,7 +154,7 @@ void board_remove(int x, int y) {//겉 보드 지울 값 넣기
 			showboard[x][y] = 1;
 			if (x - 1 != -1 && y - 1 != -1)board_remove(x - 1, y - 1);
 			if (y - 1 != -1)board_remove(x, y - 1);
-			if (x + 1 != size)board_remove(x + 1, y - 1);
+			if (x + 1 != size && y - 1 != -1)board_remove(x + 1, y - 1);
 			if (x - 1 != -1)board_remove(x - 1, y);
 			if (x + 1 != size)board_remove(x + 1, y);
 			if (x - 1 != -1 && y + 1 != size)board_remove(x - 1, y + 1);
@@ -163,15 +172,11 @@ void board_remove(int x, int y) {//겉 보드 지울 값 넣기
 void flag(int x, int y) {//깃발
 	if (showboard[x][y] == 3) {
 		showboard[x][y] = 0;
-		if (board[x][y] == 8) {
-			mine_count++;
-		}
+		mine_count++;
 	}
 	else {
 		showboard[x][y] = 3;
-		if (board[x][y] == 8) {
-			mine_count--;
-		}
+		mine_count--;
 	}
 }
 void gameover() {//지뢰 밟았을 때
@@ -181,7 +186,9 @@ void gameover() {//지뢰 밟았을 때
 	int b = 3;
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {
-			printf("%d ", board[i][j]);
+			if (board[i][j] == 8) {
+				printf("%d ", board[i][j]);
+			}
 		}
 		gotoxy(3, b);
 		b++;
@@ -191,7 +198,7 @@ void gameover() {//지뢰 밟았을 때
 }
 void success() {
 	if (mine_count == 0) {
-		gotoxy(35,10);
+		gotoxy(35, 10);
 		printf("지뢰를 모두 찾아냈습니다 : GAME CLEAR!");
 
 		gotoxy(3, 2);
