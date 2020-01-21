@@ -1,2 +1,2 @@
-# Minesweeper project - C
-지뢰찾기 게임 C언어로 구현
+# Minesweeper - C :triangular_flag_on_post:
+지뢰찾기 게임 콘솔로 구현
